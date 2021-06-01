@@ -11,6 +11,7 @@ logging.getLogger("openai").setLevel(logging.WARNING)
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
+    parser.add_argument('--model_name', default=None)
     parser.add_argument('--model_args', default="")
     parser.add_argument('--tasks', default="all_tasks")
     parser.add_argument('--provide_description', action="store_true")
@@ -30,14 +31,14 @@ def main():
     np.random.seed(args.seed)
 
     lm = models.get_model(args.model).create_from_arg_string(args.model_args, {
-        'batch_size': args.batch_size, 'device': args.device
+        'batch_size': args.batch_size, 'device': args.device, 'pretrained': args.model_name
     })
     
     if args.limit:
         print("WARNING: --limit SHOULD ONLY BE USED FOR TESTING. REAL METRICS SHOULD NOT BE COMPUTED USING LIMIT.")
 
     if not args.no_cache:
-        lm = base.CachingLM(lm, 'lm_cache/' + args.model + '_' + args.model_args.replace('=', '-').replace(',', '_').replace('/', '-') + '.db')
+        lm = base.CachingLM(lm, 'lm_cache/' + args.model_name + '_' + args.model_args.replace('=', '-').replace(',', '_').replace('/', '-') + '.db')
     if args.tasks == "all_tasks":
         task_names = tasks.ALL_TASKS
     else:
