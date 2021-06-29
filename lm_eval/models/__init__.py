@@ -4,6 +4,7 @@ from . import dummy
 
 MODEL_REGISTRY = {
     "gpt2": gpt2.GPT2LM,
+    "gptj-split": gptj.GPTJSplitLM,
     "gpt3": gpt3.GPT3LM,
     "dummy": dummy.DummyLM,
 }
