@@ -14,9 +14,10 @@ except ImportError:
 from pathlib import Path
 
 class Checkpoint(MutableMapping):
-    def __init__(self, chkpt_dir, config, device="cpu"):
+    def __init__(self, chkpt_dir, config):
         dtypes = {"fp32": torch.float32, "fp16": torch.float16, "bf16": torch.bfloat16}
-        self.device = device
+        self.device = config.model_device if config.model_device is not None else "cpu"
+        self.config = config
         self.dtype = dtypes[config.model_dtype]
         self.chkpt_dir = Path(chkpt_dir)
         self.checkpoint = torch.load(str(chkpt_dir / Path("m.pt")))
@@ -35,9 +36,9 @@ class Checkpoint(MutableMapping):
         for key in self.checkpoint:
             yield (key, self.__getitem__(key))
     def __copy__(self):
-        return Checkpoint(self.chkpt_dir, device=self.device)
+        return Checkpoint(self.chkpt_dir, self.config)
     def copy(self):
-        return Checkpoint(self.chkpt_dir, device=self.device)
+        return Checkpoint(self.chkpt_dir, self.config)
 
 class GPTJSplitLM(LM):
     MAX_GEN_TOKS = 256
