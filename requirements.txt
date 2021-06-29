@@ -1,1 +1,2 @@
+https://github.com/finetuneanon/transformers/archive/refs/heads/gpt-neo-localattention3-rp-b.zip
 -e .
