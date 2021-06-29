@@ -1,4 +1,5 @@
 from . import gpt2
+from . import gptj
 from . import gpt3
 from . import dummy
 
